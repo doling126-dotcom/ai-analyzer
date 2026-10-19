@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Cpu, Camera, Loader2, AlertCircle, Wand2 } from "lucide-react";
+import Link from "next/link";
+import { Cpu, Camera, Loader2, AlertCircle, Wand2, Clapperboard } from "lucide-react";
 import ImageUploader from "./components/ImageUploader";
 import AiAnalysisResult from "./components/AiAnalysisResult";
 import PhotoAnalysisResult from "./components/PhotoAnalysisResult";
@@ -123,6 +124,14 @@ export default function HomePage() {
               </p>
             </div>
           </div>
+          <Link
+            href="/editor"
+            className="flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-lg"
+            style={{ backgroundColor: "#7c6dfa22", color: "#c4bdfd" }}
+          >
+            <Clapperboard size={15} />
+            AI 영상 편집기
+          </Link>
         </div>
       </header>
 
