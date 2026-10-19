@@ -23,6 +23,10 @@ export interface Clip {
   fadeIn: number; // seconds
   fadeOut: number; // seconds
   label: string;
+  // How footage with a different aspect ratio fits the frame: "cover" fills
+  // it and crops the edges (e.g. landscape footage in a 9:16 short),
+  // "contain" shows everything with black bars. Missing means "contain".
+  fit?: "cover" | "contain";
 }
 
 export interface Project {

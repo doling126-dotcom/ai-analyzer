@@ -34,8 +34,8 @@ import { C } from "./theme";
 
 
 const PRESETS = [
+  { label: "세로 9:16 쇼츠·릴스 (1080×1920)", width: 1080, height: 1920 },
   { label: "가로 16:9 (1920×1080)", width: 1920, height: 1080 },
-  { label: "세로 9:16 쇼츠 (1080×1920)", width: 1080, height: 1920 },
   { label: "정사각 1:1 (1080×1080)", width: 1080, height: 1080 },
 ];
 

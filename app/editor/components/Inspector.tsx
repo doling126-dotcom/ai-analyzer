@@ -175,6 +175,30 @@ export default function Inspector({
         </div>
       </Section>
 
+      <Section title="화면 맞춤">
+        <div className="grid grid-cols-2 gap-1">
+          {(
+            [
+              ["cover", "꽉 채우기", "가장자리를 잘라 화면을 채움"],
+              ["contain", "전체 보이기", "잘리지 않게, 남는 곳은 검은 여백"],
+            ] as const
+          ).map(([fit, label, hint]) => (
+            <button
+              key={fit}
+              title={hint}
+              onClick={() => update({ fit })}
+              className="px-2 py-1.5 rounded text-xs border"
+              style={{
+                borderColor: C.border,
+                backgroundColor: (clip.fit ?? "contain") === fit ? C.accent : undefined,
+              }}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      </Section>
+
       <Section title="자막 / 텍스트">
         {clip.text ? (
           <>
@@ -234,7 +258,7 @@ export default function Inspector({
           <button
             className="w-full rounded-md border border-dashed py-2 text-xs"
             style={{ borderColor: C.border }}
-            onClick={() => update({ text: defaultText("자막을 입력하세요") })}
+            onClick={() => update({ text: defaultText("자막을 입력하세요", project) })}
           >
             + 텍스트 추가
           </button>

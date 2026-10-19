@@ -7,7 +7,7 @@ import { spawn } from "child_process";
 import { createHash } from "crypto";
 import { existsSync, promises as fs } from "fs";
 import path from "path";
-import { clipDuration } from "./ops";
+import { bottomTextMargin, clipDuration } from "./ops";
 import type { Clip, Media, Project, SpeechRange } from "./types";
 import {
   RENDER_DIR,
@@ -192,8 +192,12 @@ async function renderSegment(
 
   const v: string[] = [
     `setpts=(PTS-STARTPTS)/${clip.speed}`,
-    `scale=${W}:${H}:force_original_aspect_ratio=decrease`,
-    `pad=${W}:${H}:(ow-iw)/2:(oh-ih)/2:color=black`,
+    ...(clip.fit === "cover"
+      ? [`scale=${W}:${H}:force_original_aspect_ratio=increase`, `crop=${W}:${H}`]
+      : [
+          `scale=${W}:${H}:force_original_aspect_ratio=decrease`,
+          `pad=${W}:${H}:(ow-iw)/2:(oh-ih)/2:color=black`,
+        ]),
     "setsar=1",
     `fps=${fps}`,
   ];
@@ -205,7 +209,7 @@ async function renderSegment(
         ? "h*0.06"
         : clip.text.position === "center"
           ? "(h-text_h)/2"
-          : "h-text_h-h*0.08";
+          : `h-text_h-h*${bottomTextMargin(project)}`;
     const color = /^#[0-9a-fA-F]{6}$/.test(clip.text.color) ? clip.text.color : "#ffffff";
     v.push(
       [

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { clipDuration, clipStartTime, locate } from "@/lib/video/ops";
+import { bottomTextMargin, clipDuration, clipStartTime, locate } from "@/lib/video/ops";
 import type { Media, Project } from "@/lib/video/types";
 import { C } from "../theme";
 
@@ -139,8 +139,8 @@ export default function Preview({
     >
       <video
         ref={videoRef}
-        className="absolute inset-0 w-full h-full object-contain"
-        style={{ opacity }}
+        className="absolute inset-0 w-full h-full"
+        style={{ opacity, objectFit: clip?.fit === "cover" ? "cover" : "contain" }}
         playsInline
         preload="auto"
       />
@@ -149,7 +149,7 @@ export default function Preview({
           className="absolute left-0 right-0 flex justify-center px-[4%] pointer-events-none"
           style={{
             top: text.position === "top" ? "6%" : text.position === "center" ? "50%" : undefined,
-            bottom: text.position === "bottom" ? "8%" : undefined,
+            bottom: text.position === "bottom" ? `${bottomTextMargin(project) * 100}%` : undefined,
             transform: text.position === "center" ? "translateY(-50%)" : undefined,
             opacity,
           }}

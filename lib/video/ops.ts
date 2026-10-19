@@ -7,7 +7,15 @@ import type { Clip, ClipText, Media, Project, SpeechRange } from "./types";
 export type ClipPatch = Partial<
   Pick<
     Clip,
-    "start" | "end" | "speed" | "volume" | "text" | "fadeIn" | "fadeOut" | "label"
+    | "start"
+    | "end"
+    | "speed"
+    | "volume"
+    | "text"
+    | "fadeIn"
+    | "fadeOut"
+    | "label"
+    | "fit"
   >
 >;
 
@@ -46,11 +54,25 @@ export function projectDuration(project: Project): number {
   return project.clips.reduce((sum, c) => sum + clipDuration(c), 0);
 }
 
-export function defaultText(content: string): ClipText {
+export function isVertical(project: Pick<Project, "width" | "height">): boolean {
+  return project.height > project.width;
+}
+
+/** Bottom text margin as a fraction of the height. Shorts/Reels overlay
+ * their own UI on the lower part of the screen, so vertical videos keep
+ * captions higher. */
+export function bottomTextMargin(project: Pick<Project, "width" | "height">): number {
+  return isVertical(project) ? 0.22 : 0.08;
+}
+
+export function defaultText(
+  content: string,
+  project: Pick<Project, "width" | "height">
+): ClipText {
   return {
     content,
     position: "bottom",
-    size: 56,
+    size: Math.round(Math.min(project.width, project.height) * 0.06),
     color: "#ffffff",
     background: true,
   };
@@ -68,6 +90,7 @@ export function makeClip(mediaId: string, start: number, end: number): Clip {
     fadeIn: 0,
     fadeOut: 0,
     label: "",
+    fit: "cover",
   };
 }
 

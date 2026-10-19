@@ -22,7 +22,9 @@ Operations:
 - insert_clip: add a new clip from a media file at a 0-based index.
 - replace_media: swap the footage of a clip for another media file (keeps its text, speed and fades).
 
-Operations are applied in order, and clip ids stay stable except that split_clip and duplicate_clip create new clips you cannot reference in the same response. Text size is in output pixels (the output height is given); 40–80 suits subtitles. Write on-screen text in the language the user uses. If frames are attached, use them to understand what each clip shows. If the request is ambiguous or impossible, return no operations and explain why in summary. The summary is shown to the user: write it in the user's language, one or two sentences.`;
+The fit field decides how footage with a different aspect ratio fills the frame: "cover" fills it and crops the edges, "contain" shows the whole picture with black bars.
+
+Operations are applied in order, and clip ids stay stable except that split_clip and duplicate_clip create new clips you cannot reference in the same response. Text size is in output pixels (the output size is given); about 6% of the shorter side suits subtitles. A height larger than the width means a vertical short (YouTube Shorts / Reels / TikTok). Write on-screen text in the language the user uses. If frames are attached, use them to understand what each clip shows. If the request is ambiguous or impossible, return no operations and explain why in summary. The summary is shown to the user: write it in the user's language, one or two sentences.`;
 
 const patchSchema = {
   type: "object",
@@ -35,6 +37,7 @@ const patchSchema = {
     fadeIn: { type: "number" },
     fadeOut: { type: "number" },
     label: { type: "string" },
+    fit: { type: "string", enum: ["cover", "contain"] },
     text: {
       anyOf: [
         { type: "null" },
@@ -130,6 +133,7 @@ export async function POST(request: Request) {
         fadeOut: c.fadeOut,
         text: c.text,
         label: c.label || undefined,
+        fit: c.fit ?? "contain",
       };
       t += clipDuration(c);
       return row;
